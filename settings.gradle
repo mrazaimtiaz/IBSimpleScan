@@ -1,0 +1,22 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+    }
+}
+dependencyResolutionManagement {
+
+    repositories {
+
+        maven { url 'https://jitpack.io' }
+    }
+}
+rootProject.name = "IBSimpleScan"
+include ':app', ':idtabsdk-release'
+include ':IBScanCommon'
+include ':nfcCardReader'
+
+include ':lib-eyecooliris-uvc'
+include ':IBScanUltimate'

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_ely_mrz"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ElyMrzActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btGetInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get Info"
+            android:onClick="getInfo" />
+
+        <Button
+            android:id="@+id/btReadMrz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Read Mrz"
+            android:onClick="readMrz"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvMrz"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:typeface="monospace"
+        android:maxLines="4"
+        android:lines="4" />
+
+</LinearLayout>
