@@ -41,6 +41,7 @@ import com.integratedbiometrics.ibsimplescan.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 虹膜测试
@@ -79,6 +80,8 @@ public class IrisActivity extends AppCompatActivity implements View.OnClickListe
         Logs.i(TAG, "onCreate...");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
+
+        Objects.requireNonNull(this.getSupportActionBar()).hide();
 
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -303,9 +306,11 @@ public class IrisActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 注册
      */
+
+
     private void enroll(final String name) {
 
-        mIrisFragment.enroll(600000, new IrisFragment.EnrollCallback() {
+        mIrisFragment.enroll(60000, new IrisFragment.EnrollCallback() {
             @Override
             public void onSuccess(byte[] template) {
                 leftEnrollProgress.setProgress(100);
@@ -317,6 +322,22 @@ public class IrisActivity extends AppCompatActivity implements View.OnClickListe
 
                 Constants.INSTANCE.setCameraByte(template)  ;
                 Person person = new Person(name, template);
+
+                byte[] irisImageData = mIrisFragment.getCameraBytes();
+                Constants.INSTANCE.setCameraByte(null);
+                if (irisImageData != null) {
+                    mImageUtil.saveRawAsBmpBuf(irisImageData, mIrisFragment.getPreviewWidth(), mIrisFragment.getPreviewHeight());
+                    byte[] bmpImgBuf = mImageUtil.getBmpImgBuf();
+
+
+                    Constants.INSTANCE.setCameraByte(bmpImgBuf);
+
+                    mHintTv.setText(R.string.capture_success);
+
+                    Intent intent = new Intent(IrisActivity.this, InfoActivity.class);
+                    startActivity(intent);
+                }
+
                 mFeatures.add(person);
 
                 FileUtils.writeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/iris_template.txt", template);

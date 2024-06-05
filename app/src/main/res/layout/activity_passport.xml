@@ -70,6 +70,7 @@ app:layout_constraintTop_toBottomOf="@+id/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text"
         app:layout_constraintStart_toStartOf="parent"
+
         android:background="@drawable/btnaction"
         android:textSize="23sp"
         android:layout_width="150dp"

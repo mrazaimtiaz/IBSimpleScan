@@ -1,16 +1,13 @@
 package com.integratedbiometrics.ibsimplescan
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.integratedbiometrics.ibsimplescan.utils.Constants
+import java.util.*
 
 class InfoActivity : AppCompatActivity() {
 
@@ -20,6 +17,7 @@ class InfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
 
+        Objects.requireNonNull(this.supportActionBar)?.hide()
 
         findViewById<View>(R.id.back).setOnClickListener { finish() }
 
@@ -31,6 +29,20 @@ class InfoActivity : AppCompatActivity() {
             findViewById<ImageView>(R.id.imageView).setImageBitmap(Constants.scanByte)
 
 
+        }
+        if(Constants.cameraByte != null){
+            // Convert decoded byte array to Bitmap
+
+            // Convert decoded byte array to Bitmap
+            val bitmap = BitmapFactory.decodeByteArray(Constants.cameraByte, 0, Constants.cameraByte!!.size)
+
+            // Display Bitmap in ImageView
+
+            // Display Bitmap in ImageView
+            if (bitmap != null) {
+                val imageView = findViewById<ImageView>(R.id.imageViewCamera)
+                imageView.setImageBitmap(bitmap)
+            }
         }
         findViewById<TextView>(R.id.textPassoert).setText(Constants.MRZ_GLOBAL)
     }
