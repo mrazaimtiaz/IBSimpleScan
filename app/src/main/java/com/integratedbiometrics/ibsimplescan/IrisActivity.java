@@ -320,10 +320,10 @@ public class IrisActivity extends AppCompatActivity implements View.OnClickListe
                 //save --my
                 //save my--
 
-                Constants.INSTANCE.setCameraByte(template)  ;
+             //   Constants.INSTANCE.setCameraByte(template)  ;
                 Person person = new Person(name, template);
 
-                byte[] irisImageData = mIrisFragment.getCameraBytes();
+              byte[] irisImageData = mIrisFragment.getCameraBytes();
                 Constants.INSTANCE.setCameraByte(null);
                 if (irisImageData != null) {
                     mImageUtil.saveRawAsBmpBuf(irisImageData, mIrisFragment.getPreviewWidth(), mIrisFragment.getPreviewHeight());
@@ -339,6 +339,7 @@ public class IrisActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 mFeatures.add(person);
+
 
                 FileUtils.writeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/iris_template.txt", template);
 
