@@ -35,6 +35,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.integratedbiometrics.ibsimplescan.utils.Constants;
 import com.telpo.tps550.api.printer.UsbThermalPrinter;
 import com.telpo.tps550.api.util.StringUtil;
 import com.telpo.tps550.api.util.SystemUtil;
@@ -43,7 +44,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 
 public class USBPrinterActivity extends Activity {
 
@@ -575,6 +579,38 @@ public class USBPrinterActivity extends Activity {
             }
         }).start();
 
+        // Schedule the message to be sent after 5 seconds
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Send the message with some data
+//                String exditText = editTextPrintGray.getText().toString();
+//                if (exditText == null || exditText.length() < 1) {
+//                    Toast.makeText(USBPrinterActivity.this, getString(R.string.gray_level) + getString(R.string.lengthNotEnougth), Toast.LENGTH_LONG).show();
+//                    return;
+//                }
+//                printGray = Integer.parseInt(exditText);
+//                if (printGray < 0 || printGray > 7) {
+//                    Toast.makeText(USBPrinterActivity.this, getString(R.string.outOfGray), Toast.LENGTH_LONG).show();
+//                    return;
+//                }
+//                if (LowBattery == true) {
+//                    handler.sendMessage(handler.obtainMessage(LOWBATTERY, 1, 0, null));
+//                } else {
+//                    if (!nopaper) {
+//                        progressDialog = ProgressDialog.show(USBPrinterActivity.this, getString(R.string.bl_dy), getString(R.string.printing_wait));
+//                        handler.sendMessage(handler.obtainMessage(PRINTPICTURE, 1, 0, null));
+//                    } else {
+//                        Toast.makeText(USBPrinterActivity.this, getString(R.string.ptintInit), Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//                finish(); // Close the activity
+//            }
+//        }, 5000);
+
+//        handler.sendMessage(handler.obtainMessage(PRINTPICTURE, 1, 0, null));
+//        finish();
+
     }
 
     /* Called when the application resumes */
@@ -872,6 +908,8 @@ public class USBPrinterActivity extends Activity {
                 mUsbThermalPrinter.reset();
                 mUsbThermalPrinter.setGray(printGray);
                 mUsbThermalPrinter.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE);
+
+
                 File file = new File(picturePath);
                 if (file.exists()) {
                     mUsbThermalPrinter.printLogo(BitmapFactory.decodeFile(picturePath),false);
@@ -885,6 +923,19 @@ public class USBPrinterActivity extends Activity {
                         }
                     });
                 }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                String currentDateTime = sdf.format(new Date());
+                mUsbThermalPrinter.setAlgin(UsbThermalPrinter.ALGIN_LEFT);
+                mUsbThermalPrinter.addString("Passport Number: " + Constants.INSTANCE.getPassportNumber() + "\n");
+                mUsbThermalPrinter.addString("Name: " + Constants.INSTANCE.getPassportName() + "\n");
+                mUsbThermalPrinter.addString("Date of Birth: " + Constants.INSTANCE.getDobValue() + "\n");
+                mUsbThermalPrinter.addString("Nationality: " + Constants.INSTANCE.getNationalityName() + "\n");
+                mUsbThermalPrinter.addString("Expiry Date: " + Constants.INSTANCE.getExpirationName() + "\n");
+
+                mUsbThermalPrinter.addString("Enrollment Date: " + currentDateTime + "\n");
+
+                mUsbThermalPrinter.printString();
+                mUsbThermalPrinter.walkPaper(20);
             } catch (Exception e) {
                 e.printStackTrace();
                 Result = e.toString();

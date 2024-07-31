@@ -1340,7 +1340,8 @@ public class SimpleScanActivity extends Activity
 				if(m_arrCaptureSeq.size() > 3){
 					Log.d(TAG, "_UpdateCaptureSequences: called2");
 
-					m_cboCaptureSeq.setSelection(3); //save -my
+					//m_cboCaptureSeq.setSelection(3); //save -my
+					m_cboCaptureSeq.setSelection(7); //save -my
 				}
 				myIndex = 1;
 

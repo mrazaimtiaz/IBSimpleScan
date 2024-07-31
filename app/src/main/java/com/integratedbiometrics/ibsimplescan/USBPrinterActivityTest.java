@@ -132,7 +132,7 @@ public class USBPrinterActivityTest extends Activity {
                     new paperWalkPrintThread().start();
                     break;
                 case PRINTCONTENT:
-                    new contentPrintThread().start();
+                    new  printPictureWithPassport().start();
                     break;
                 case MAKER:
                     new MakerThread().start();
@@ -579,8 +579,31 @@ public class USBPrinterActivityTest extends Activity {
             }
         }).start();
 
-        handler.sendMessage(handler.obtainMessage(PRINTCONTENT, 1, 0, null));
+
+        // Send the message with some data
+        String exditText = editTextPrintGray.getText().toString();
+        if (exditText == null || exditText.length() < 1) {
+            Toast.makeText(USBPrinterActivityTest.this, getString(R.string.gray_level) + getString(R.string.lengthNotEnougth), Toast.LENGTH_LONG).show();
+            return;
+        }
+        printGray = Integer.parseInt(exditText);
+        if (printGray < 0 || printGray > 7) {
+            Toast.makeText(USBPrinterActivityTest.this, getString(R.string.outOfGray), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (LowBattery == true) {
+            handler.sendMessage(handler.obtainMessage(LOWBATTERY, 1, 0, null));
+        } else {
+            if (!nopaper) {
+                progressDialog = ProgressDialog.show(USBPrinterActivityTest.this, getString(R.string.bl_dy), getString(R.string.printing_wait));
+                handler.sendMessage(handler.obtainMessage(PRINTCONTENT, 1, 0, null));
+            } else {
+                Toast.makeText(USBPrinterActivityTest.this, getString(R.string.ptintInit), Toast.LENGTH_LONG).show();
+            }
+        }
         finish();
+//        handler.sendMessage(handler.obtainMessage(PRINTCONTENT, 1, 0, null));
+//        finish();
 
     }
 
@@ -794,6 +817,65 @@ public class USBPrinterActivityTest extends Activity {
         }
     }
 
+
+    private class printPictureWithPassport extends Thread {
+
+        @Override
+        public void run() {
+            super.run();
+            try {
+                mUsbThermalPrinter.reset();
+                mUsbThermalPrinter.setGray(printGray);
+                mUsbThermalPrinter.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE);
+
+
+                File file = new File(picturePath);
+                if (file.exists()) {
+                    mUsbThermalPrinter.printLogo(BitmapFactory.decodeFile(picturePath),false);
+                    mUsbThermalPrinter.walkPaper(20);
+                } else {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Toast.makeText(USBPrinterActivityTest.this, getString(R.string.not_find_picture), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                String currentDateTime = sdf.format(new Date());
+                mUsbThermalPrinter.setAlgin(UsbThermalPrinter.ALGIN_LEFT);
+                mUsbThermalPrinter.addString("Passport Number: " + Constants.INSTANCE.getPassportNumber() + "\n");
+                mUsbThermalPrinter.addString("Name: " + Constants.INSTANCE.getPassportName() + "\n");
+                mUsbThermalPrinter.addString("Date of Birth: " + Constants.INSTANCE.getDobValue() + "\n");
+                mUsbThermalPrinter.addString("Nationality: " + Constants.INSTANCE.getNationalityName() + "\n");
+                mUsbThermalPrinter.addString("Expiry Date: " + Constants.INSTANCE.getExpirationName() + "\n");
+
+                mUsbThermalPrinter.addString("Enrollment Date: " + currentDateTime + "\n");
+
+                mUsbThermalPrinter.printString();
+                mUsbThermalPrinter.walkPaper(20);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Result = e.toString();
+                if (Result.equals("com.telpo.tps550.api.printer.NoPaperException")) {
+                    nopaper = true;
+                } else if (Result.equals("com.telpo.tps550.api.printer.OverHeatException")) {
+                    handler.sendMessage(handler.obtainMessage(OVERHEAT, 1, 0, null));
+                } else {
+                    handler.sendMessage(handler.obtainMessage(PRINTERR, 1, 0, null));
+                }
+            } finally {
+                handler.sendMessage(handler.obtainMessage(CANCELPROMPT, 1, 0, null));
+                if (nopaper){
+                    handler.sendMessage(handler.obtainMessage(NOPAPER, 1, 0, null));
+                    nopaper = false;
+                    return;
+                }
+            }
+        }
+    }
+
     private class contentPrintThread extends Thread {
         @Override
         public void run() {
@@ -813,6 +895,9 @@ public class USBPrinterActivityTest extends Activity {
                     mUsbThermalPrinter.setTextSize(10);
                 }
                 //mUsbThermalPrinter.setHighlight(true);
+
+
+
                 mUsbThermalPrinter.setGray(printGray);
 //                String base64Ticket = "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";
 //                byte[] encodedTicketBytes = Base64.decode(base64Ticket, Base64.DEFAULT);

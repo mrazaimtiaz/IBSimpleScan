@@ -40,6 +40,10 @@ class InfoActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.back).setOnClickListener { finish() }
 
+        findViewById<View>(R.id.home).setOnClickListener {
+            val intent = Intent(this@InfoActivity, MainActivity::class.java)
+            startActivity(intent) }
+
 
         findViewById<Button>(R.id.printButton).setOnClickListener {
                         val intent = Intent(this, USBPrinterActivityTest::class.java)
