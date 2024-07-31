@@ -9,10 +9,25 @@ object Constants {
      var NAME_GLOBAL = ""
 
      var MRZ_GLOBAL = ""
-     var scanByte:
+
+     var featureCamera:
+             ByteArray? = null
+
+
+     var picture:
              Bitmap? = null
+     var fingerFeature:
+             List<ByteArray>? = null
+
+     var scanByte:
+             List<Bitmap>? = null
      var cameraByte:
              ByteArray? = null
 
+     var passportName = ""
+     var nationalityName = ""
+     var dobValue = ""
+     var passportNumber = ""
+     var expirationName = ""
 
 }

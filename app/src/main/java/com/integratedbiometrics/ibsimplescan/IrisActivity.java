@@ -331,6 +331,8 @@ public class IrisActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     Constants.INSTANCE.setCameraByte(bmpImgBuf);
+                    Constants.INSTANCE.setFeatureCamera(person.feature);
+
 
                     mHintTv.setText(R.string.capture_success);
 

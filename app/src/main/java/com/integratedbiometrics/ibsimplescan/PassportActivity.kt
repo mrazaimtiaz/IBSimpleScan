@@ -2,35 +2,30 @@ package com.integratedbiometrics.ibsimplescan
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
+import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.elyctis.idtabsdk.io.Io
 import com.elyctis.idtabsdk.mrz.MrzScanner
 import com.elyctis.idtabsdk.usbpermission.UsbPermissionActivity
 import com.example.s10.test.UsbSession
+import com.integratedbiometrics.ibsimplescan.utils.*
 import com.integratedbiometrics.ibsimplescan.utils.Constants.MRZ_GLOBAL
 import com.integratedbiometrics.ibsimplescan.utils.Constants.NAME_GLOBAL
-import com.integratedbiometrics.ibsimplescan.utils.MrzParser
-import com.integratedbiometrics.ibsimplescan.utils.MyMrzParser
-import com.integratedbiometrics.ibsimplescan.utils.UsbAttachedReceiver
-import kotlinx.coroutines.*
-import org.w3c.dom.Text
-import java.util.concurrent.Executors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
+var copyText = ""
+
+private var clipboardManager: ClipboardManager? = null
 class PassportActivity : AppCompatActivity() {
 
     private lateinit var scheduler: ScheduledExecutorService
@@ -76,6 +71,16 @@ class PassportActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
+    private fun copyTextToClipboard(text: String) {
+        // Create a ClipData object with the text to be copied
+        val clipData = ClipData.newPlainText("label", text)
+
+        // Set the ClipData to the ClipboardManager
+        clipboardManager!!.setPrimaryClip(clipData)
+
+        // Show a toast message to inform the user
+        Toast.makeText(this, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_passport)
@@ -83,6 +88,82 @@ class PassportActivity : AppCompatActivity() {
             getSupportActionBar()?.hide()
 
         findViewById<View>(R.id.back).setOnClickListener { finish() }
+
+
+        findViewById<View>(R.id.search).setOnClickListener {
+            if(     findViewById<LinearLayout>(R.id.layoutSearch).visibility == View.VISIBLE){
+                findViewById<LinearLayout>(R.id.layoutSearch).visibility =  View.GONE
+
+            }else{
+                findViewById<LinearLayout>(R.id.layoutSearch).visibility =  View.VISIBLE
+
+            }
+        }
+        clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?;
+
+        findViewById<Button>(R.id.CopyBtn).setOnClickListener {
+            findViewById<LinearLayout>(R.id.passportLayout).visibility = View.VISIBLE
+            findViewById<LinearLayout>(R.id.dummyLayout).visibility = View.GONE
+
+
+            findViewById<TextView>(R.id.name_value).setText(  findViewById<TextView>(R.id.name_value_visa).text)
+
+            findViewById<TextView>(R.id.nationality_value).setText(findViewById<TextView>(R.id.nationality_value_visa).text)
+
+          //  Constants.nationalityName =  record.nationality
+
+            findViewById<TextView>(R.id.expiry_value).setText(findViewById<TextView>(R.id.expiry_value_visa).text)
+            findViewById<TextView>(R.id.dob_value).setText(findViewById<TextView>(R.id.dob_value_visa).text)
+            findViewById<TextView>(R.id.gender_value).setText(findViewById<TextView>(R.id.gender_value_visa).text)
+
+            findViewById<TextView>(R.id.document_value).setText(findViewById<TextView>(R.id.document_value_visa).text)
+
+
+
+
+            Constants.passportName =  findViewById<TextView>(R.id.name_value).text.toString()
+            Constants.nationalityName =  findViewById<TextView>(R.id.nationality_value).text.toString()
+            Constants.expirationName =   findViewById<TextView>(R.id.expiry_value).text.toString()
+
+
+            Constants.dobValue =      findViewById<TextView>(R.id.dob_value).text.toString()
+
+            Constants.passportNumber =findViewById<TextView>(R.id.document_value).text.toString()
+
+            // copyTextToClipboard(copyText);
+
+        }
+
+        findViewById<Button>(R.id.search_button).setOnClickListener {
+        var searchText =    findViewById<EditText>(R.id.search_edit_text).text.toString()
+
+            if(searchText == sampleUserData.passportNumber || searchText == sampleUserData.moireference){
+
+                setUpUserData(sampleUserData)
+                setUpOnlyPassportNumber(sampleUserData.passportNumber)
+                findViewById<TextView>(R.id.textPassoert).visibility = View.GONE
+            }else if(searchText == sampleUserDataTwo.passportNumber || searchText == sampleUserDataTwo.moireference){
+                setUpUserData(sampleUserDataTwo)
+                setUpOnlyPassportNumber(sampleUserDataTwo.passportNumber)
+                findViewById<TextView>(R.id.textPassoert).visibility = View.GONE
+            }else if(searchText == sampleUserDataThree.passportNumber || searchText == sampleUserDataThree.moireference){
+                setUpUserData(sampleUserDataThree)
+                setUpOnlyPassportNumber(sampleUserDataThree.passportNumber)
+                findViewById<TextView>(R.id.textPassoert).visibility = View.GONE
+            }else if(searchText ==  sampleUserDataFour.moireference  || searchText ==  sampleUserDataFour.passportNumber){
+                setUpUserData(sampleUserDataFour)
+                setUpOnlyPassportNumber(sampleUserDataFour.passportNumber)
+
+                findViewById<TextView>(R.id.gender_value_visa).setText("Female")
+
+                findViewById<TextView>(R.id.textPassoert).visibility = View.GONE
+            }
+
+            else{
+                showNotFoundMsg("No data Found")
+            }
+
+        }
 
 
         findViewById<View>(R.id.home).setOnClickListener {
@@ -179,6 +260,135 @@ readMrz()
 
     }
 
+    fun showNotFoundMsg(text: String){
+
+        findViewById<Button>(R.id.CopyBtn).visibility = View.GONE
+        findViewById<LinearLayout>(R.id.visaLayout).visibility = View.GONE
+        findViewById<LinearLayout>(R.id.passportLayout).visibility = View.GONE
+        findViewById<LinearLayout>(R.id.layoutSearch).visibility = View.VISIBLE
+        findViewById<TextView>(R.id.searchResult).visibility = View.VISIBLE
+        findViewById<TextView>(R.id.searchResult).text = text
+    }
+
+    fun setUpOnlyPassportNumber( text: String){
+        findViewById<LinearLayout>(R.id.visaLayout).visibility = View.VISIBLE
+        findViewById<LinearLayout>(R.id.passportLayout).visibility = View.GONE
+        findViewById<LinearLayout>(R.id.dummyLayout).visibility = View.VISIBLE
+        findViewById<TextView>(R.id.name_value).setText("")
+
+        findViewById<TextView>(R.id.visa_number_value).setText("")
+
+
+
+        findViewById<TextView>(R.id.nationality_value).setText("")
+
+        findViewById<TextView>(R.id.expiry_value).setText("")
+
+        findViewById<TextView>(R.id.gender_value).setText("")
+        findViewById<TextView>(R.id.document_value).setText("")
+        findViewById<TextView>(R.id.dob_value).setText("")
+
+
+      //  findViewById<TextView>(R.id.document_value).setText(text)
+
+
+
+
+        findViewById<LinearLayout>(R.id.layoutSearch).visibility = View.GONE
+        findViewById<TextView>(R.id.name_value_visa).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.name_value_visa).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.searchResult).visibility = View.GONE
+
+
+        findViewById<TextView>(R.id.nationality_value_visa).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.nationality_value_visa).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.expiry_value_visa).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.expiry_value_visa).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.gender_value_visa).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.gender_value_visa).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.document_value_visa).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.document_value_visa).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.dob_value_visa).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.dob_value_visa).setBackgroundColor(Color.TRANSPARENT)
+
+
+        findViewById<TextView>(R.id.name_value).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.name_value).setBackgroundColor(Color.TRANSPARENT)
+
+
+        findViewById<TextView>(R.id.nationality_value).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.nationality_value).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.expiry_value).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.expiry_value).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.gender_value).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.gender_value).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.document_value).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.document_value).setBackgroundColor(Color.TRANSPARENT)
+
+        findViewById<TextView>(R.id.dob_value).setTextColor(Color.BLACK)
+        findViewById<TextView>(R.id.dob_value).setBackgroundColor(Color.TRANSPARENT)
+
+
+
+        //   findViewById<LinearLayout>(R.id.visaLayout).setBackgroundColor(Color.GREEN)
+        //  updateTextColor(  findViewById<LinearLayout>(R.id.visaLayout), Color.WHITE)
+
+        // Compare and update text colors
+        //   updateTextColors()
+//                            if (isMatch) {
+//
+//                            } else {
+//                                visaLayout.setBackgroundColor(Color.RED)
+//                                updateTextColor(visaLayout, Color.WHITE)
+//                            }
+    }
+
+    fun setUpUserData( tempUserData: UserData){
+        findViewById<Button>(R.id.CopyBtn).visibility = View.VISIBLE
+        findViewById<LinearLayout>(R.id.visaLayout).visibility = View.VISIBLE
+        findViewById<LinearLayout>(R.id.passportLayout).visibility = View.VISIBLE
+        findViewById<TextView>(R.id.name_value_visa).setText(tempUserData.passportName)
+        findViewById<TextView>(R.id.moi_value_visa).setText(tempUserData.moireference)
+        findViewById<TextView>(R.id.passport_type_value_visa).setText(tempUserData.passportType)
+
+        findViewById<TextView>(R.id.visa_number_value_visa).setText(tempUserData.visaNumber)
+        findViewById<TextView>(R.id.visa_type_value_visa).setText(tempUserData.visaType)
+        findViewById<TextView>(R.id.visa_expiry_value_visa).setText(tempUserData.visaExpiryDate)
+        findViewById<TextView>(R.id.date_of_issue_value_visa).setText(tempUserData.visaIssueDate)
+
+
+
+        findViewById<TextView>(R.id.nationality_value_visa).setText(tempUserData.nationalityName)
+
+        findViewById<TextView>(R.id.expiry_value_visa).setText(tempUserData.expirationName)
+
+        findViewById<TextView>(R.id.gender_value_visa).setText("Male")
+        findViewById<TextView>(R.id.document_value_visa).setText(tempUserData.passportNumber)
+        findViewById<TextView>(R.id.dob_value_visa).setText(tempUserData.dobValue)
+
+        //   findViewById<LinearLayout>(R.id.visaLayout).setBackgroundColor(Color.GREEN)
+        //  updateTextColor(  findViewById<LinearLayout>(R.id.visaLayout), Color.WHITE)
+
+        // Compare and update text colors
+        //   updateTextColors()
+//                            if (isMatch) {
+//
+//                            } else {
+//                                visaLayout.setBackgroundColor(Color.RED)
+//                                updateTextColor(visaLayout, Color.WHITE)
+//                            }
+    }
+
+
+    val matchingColor = Color.parseColor("#006400") // Dark green color
    suspend fun readMrz() {
         if (mScanner!!.open()) {
             var mrz = ""
@@ -193,7 +403,9 @@ readMrz()
                 text = "No decodable MRZ Found"
 
                 withContext(Dispatchers.Main){
+                    findViewById<TextView>(R.id.textPassoert).visibility =View.VISIBLE
                     findViewById<TextView>(R.id.textPassoert).setText(text)
+                    findViewById<LinearLayout>(R.id.dummyLayout).visibility = View.GONE
 
                 }
             }  else {
@@ -208,14 +420,181 @@ readMrz()
                     System.out.println("Name: " + record.givenNames + " " + record.surname);
 
                     withContext(Dispatchers.Main){
+                        findViewById<TextView>(R.id.textPassoert).visibility =View.GONE
                         findViewById<LinearLayout>(R.id.passportLayout).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.name_value).setText( record.givenNames)
-                        findViewById<TextView>(R.id.nationality_value).setText(record.nationality)
-                        findViewById<TextView>(R.id.expiry_value).setText(record.expirationDate.day.toString() + "/" + record.expirationDate.month.toString() + "/"  +record.expirationDate.year.toString())
-                        findViewById<TextView>(R.id.dob_value).setText(record.dateOfBirth.day.toString() + "/" + record.dateOfBirth.month.toString() + "/"  +record.dateOfBirth.year.toString())
 
+                        findViewById<LinearLayout>(R.id.dummyLayout).visibility = View.GONE
+
+
+
+                        findViewById<TextView>(R.id.name_value).setText( record.givenNames + " " + record.surname)
+
+                        Constants.passportName =  record.givenNames
+                        findViewById<TextView>(R.id.nationality_value).setText(record.nationality)
+
+                        Constants.nationalityName =  record.nationality
+                        findViewById<TextView>(R.id.expiry_value).setText(record.expirationDate.day.toString() + "/" + record.expirationDate.month.toString() + "/"  +record.expirationDate.year.toString())
+                        Constants.expirationName =  record.expirationDate.day.toString() + "/" + record.expirationDate.month.toString() + "/"  +record.expirationDate.year.toString()
+
+
+                        findViewById<TextView>(R.id.dob_value).setText(record.dateOfBirth.day.toString() + "/" + record.dateOfBirth.month.toString() + "/"  +record.dateOfBirth.year.toString())
+                        Constants.dobValue =  record.dateOfBirth.day.toString() + "/" + record.dateOfBirth.month.toString() + "/"  +record.dateOfBirth.year.toString()
                         findViewById<TextView>(R.id.gender_value).setText(record.sex.name)
                         findViewById<TextView>(R.id.document_value).setText(record.documentNumber)
+                        Constants.passportNumber = record.documentNumber
+
+
+                        copyText =  "Name: " + record.givenNames + "\n" +  "Nationality: " + record.nationality + "\n" + "Date of Birth: "+ record.dateOfBirth.day.toString() + "/" + record.dateOfBirth.month.toString() + "/"  +record.dateOfBirth.year.toString() + "\n" + "Gender: " + record.sex.name + "\n" + "Passport Number: " + record.documentNumber
+
+
+
+
+
+
+                        if(record.documentNumber == sampleUserData.passportNumber || record.documentNumber == sampleUserDataTwo.passportNumber || record.documentNumber == sampleUserDataFour.passportNumber){
+                            findViewById<LinearLayout>(R.id.layoutSearch).visibility = View.GONE
+                            findViewById<TextView>(R.id.name_value_visa).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.name_value_visa).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.searchResult).visibility = View.GONE
+
+
+                            findViewById<TextView>(R.id.nationality_value_visa).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.nationality_value_visa).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.expiry_value_visa).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.expiry_value_visa).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.gender_value_visa).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.gender_value_visa).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.document_value_visa).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.document_value_visa).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.dob_value_visa).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.dob_value_visa).setBackgroundColor(lightGreenColor)
+
+
+                            findViewById<TextView>(R.id.name_value).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.name_value).setBackgroundColor(lightGreenColor)
+
+
+                            findViewById<TextView>(R.id.nationality_value).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.nationality_value).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.expiry_value).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.expiry_value).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.gender_value).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.gender_value).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.document_value).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.document_value).setBackgroundColor(lightGreenColor)
+
+                            findViewById<TextView>(R.id.dob_value).setTextColor(matchingColor)
+                            findViewById<TextView>(R.id.dob_value).setBackgroundColor(lightGreenColor)
+
+
+                        }
+                        if(record.documentNumber == sampleUserData.passportNumber){
+                            findViewById<LinearLayout>(R.id.visaLayout).visibility = View.VISIBLE
+
+                            setUpUserData(sampleUserData)
+//                            findViewById<TextView>(R.id.name_value_visa).setText(sampleUserData.passportName)
+//                            findViewById<TextView>(R.id.moi_value_visa).setText(sampleUserData.moireference)
+//                            findViewById<TextView>(R.id.passport_type_value_visa).setText(sampleUserData.passportType)
+//
+//                            findViewById<TextView>(R.id.visa_number_value_visa).setText(sampleUserData.visaNumber)
+//                            findViewById<TextView>(R.id.visa_type_value_visa).setText(sampleUserData.visaType)
+//                            findViewById<TextView>(R.id.visa_expiry_value_visa).setText(sampleUserData.visaExpiryDate)
+//                            findViewById<TextView>(R.id.date_of_issue_value_visa).setText(sampleUserData.visaIssueDate)
+//
+//
+//
+//                            findViewById<TextView>(R.id.nationality_value_visa).setText(sampleUserData.nationalityName)
+//
+//                            findViewById<TextView>(R.id.expiry_value_visa).setText(sampleUserData.expirationName)
+//
+//                            findViewById<TextView>(R.id.gender_value_visa).setText("Male")
+//                            findViewById<TextView>(R.id.document_value_visa).setText(sampleUserData.passportNumber)
+//                            findViewById<TextView>(R.id.dob_value_visa).setText(sampleUserData.dobValue)
+
+
+
+                        }else  if(record.documentNumber == sampleUserDataFour.passportNumber){
+                            findViewById<LinearLayout>(R.id.visaLayout).visibility = View.VISIBLE
+
+                            setUpUserData(sampleUserDataFour)
+
+                            findViewById<TextView>(R.id.gender_value_visa).setText("Female")
+//                            findViewById<TextView>(R.id.name_value_visa).setText(sampleUserData.passportName)
+//                            findViewById<TextView>(R.id.moi_value_visa).setText(sampleUserData.moireference)
+//                            findViewById<TextView>(R.id.passport_type_value_visa).setText(sampleUserData.passportType)
+//
+//                            findViewById<TextView>(R.id.visa_number_value_visa).setText(sampleUserData.visaNumber)
+//                            findViewById<TextView>(R.id.visa_type_value_visa).setText(sampleUserData.visaType)
+//                            findViewById<TextView>(R.id.visa_expiry_value_visa).setText(sampleUserData.visaExpiryDate)
+//                            findViewById<TextView>(R.id.date_of_issue_value_visa).setText(sampleUserData.visaIssueDate)
+//
+//
+//
+//                            findViewById<TextView>(R.id.nationality_value_visa).setText(sampleUserData.nationalityName)
+//
+//                            findViewById<TextView>(R.id.expiry_value_visa).setText(sampleUserData.expirationName)
+//
+//                            findViewById<TextView>(R.id.gender_value_visa).setText("Male")
+//                            findViewById<TextView>(R.id.document_value_visa).setText(sampleUserData.passportNumber)
+//                            findViewById<TextView>(R.id.dob_value_visa).setText(sampleUserData.dobValue)
+
+
+
+                        }else if(record.documentNumber == sampleUserDataTwo.passportNumber){
+
+                            findViewById<LinearLayout>(R.id.visaLayout).visibility = View.VISIBLE
+                            setUpUserData(sampleUserDataTwo)
+//                            findViewById<LinearLayout>(R.id.visaLayout).visibility = View.VISIBLE
+//                            findViewById<TextView>(R.id.name_value_visa).setText(sampleUserDataTwo.passportName)
+//                            findViewById<TextView>(R.id.moi_value_visa).setText(sampleUserDataTwo.moireference)
+//                            findViewById<TextView>(R.id.passport_type_value_visa).setText(sampleUserDataTwo.passportType)
+//
+//                            findViewById<TextView>(R.id.visa_number_value_visa).setText(sampleUserDataTwo.visaNumber)
+//                            findViewById<TextView>(R.id.visa_type_value_visa).setText(sampleUserDataTwo.visaType)
+//                            findViewById<TextView>(R.id.visa_expiry_value_visa).setText(sampleUserDataTwo.visaExpiryDate)
+//                            findViewById<TextView>(R.id.date_of_issue_value_visa).setText(sampleUserDataTwo.visaIssueDate)
+//
+//
+//
+//
+//
+//                            findViewById<TextView>(R.id.nationality_value_visa).setText(sampleUserDataTwo.nationalityName)
+//
+//                            findViewById<TextView>(R.id.expiry_value_visa).setText(sampleUserDataTwo.expirationName)
+//                            findViewById<TextView>(R.id.document_value_visa).setText(sampleUserDataTwo.passportNumber)
+//                            findViewById<TextView>(R.id.dob_value_visa).setText(sampleUserDataTwo.dobValue)
+//
+//                            findViewById<TextView>(R.id.gender_value_visa).setText("Male")
+
+
+
+
+
+
+                            findViewById<TextView>(R.id.expiry_value_visa).setTextColor(darkRedColor)
+                            findViewById<TextView>(R.id.expiry_value_visa).setBackgroundColor(lightRedColor)
+
+                            findViewById<TextView>(R.id.expiry_value).setTextColor(darkRedColor)
+                            findViewById<TextView>(R.id.expiry_value).setBackgroundColor(lightRedColor)
+
+
+                          //  findViewById<TextView>(R.id.document_value).setText("28/8/32")
+
+
+
+                        }else{
+
+                        showNotFoundMsg("No match Found for current Passport ")
+                        }
+
                     }
 
 
@@ -228,6 +607,7 @@ readMrz()
                     MRZ_GLOBAL = text;
                     withContext(Dispatchers.Main){
                         findViewById<TextView>(R.id.textPassoert).setText(text)
+
                         findViewById<ImageView>(R.id.machineImage).visibility=View.GONE
 
                     }
@@ -237,7 +617,7 @@ readMrz()
                     withContext(Dispatchers.Main){
                         findViewById<TextView>(R.id.textPassoert).setText(text)
 
-                        findViewById<ImageView>(R.id.machineImage).visibility=View.GONE
+                    //    findViewById<ImageView>(R.id.machineImage).visibility=View.GONE
 
                     }
 
@@ -317,6 +697,49 @@ readMrz()
 
      //  delay(100)
      //  readContinueLoop()
+    }
+
+    val lightGreenColor = Color.parseColor("#d0e8a6") // Dark green color
+
+
+    val lightRedColor = Color.parseColor("#f9cfcf") // Dark green color
+
+
+    val darkRedColor = Color.parseColor("#9c0c0c") // Dark green color
+
+
+    private fun updateTextColors() {
+
+
+        // Define the color for matching data
+        val matchingColor = Color.parseColor("#006400") // Dark green color
+
+
+
+
+
+        // Update Visa text color
+     //   if (isMatch) {
+            setTextColor(findViewById(R.id.visaLayout), matchingColor)
+            setTextColor(findViewById(R.id.passportLayout), matchingColor)
+//        } else {
+//            // Reset text color to default (black) for non-matching data
+//            setTextColor(findViewById(R.id.visaLayout), Color.BLACK)
+//            setTextColor(findViewById(R.id.passportLayout), Color.BLACK)
+//        }
+    }
+
+    private fun setTextColor(layout: LinearLayout, color: Int) {
+        for (i in 0 until layout.childCount) {
+            val view = layout.getChildAt(i)
+            if (view is TextView) {
+              //  if(view.text != "28/8/32" && view.text != sampleUserDataTwo.expirationName){
+
+                    view.setTextColor(color)
+                    view.setBackgroundColor(lightGreenColor)
+              //  }
+            }
+        }
     }
 
 }

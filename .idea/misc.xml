@@ -8,6 +8,7 @@
         <entry key="app/src/debug/res/drawable/text_background_selector.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/button_color.xml" value="0.172" />
         <entry key="app/src/main/res/drawable/circle.xml" value="0.173" />
+        <entry key="app/src/main/res/drawable/edit_text_bg.xml" value="0.172" />
         <entry key="app/src/main/res/drawable/ic_baseline_camera_alt_24.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/ic_baseline_credit_card_24.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/ic_baseline_fingerprint_24.xml" value="0.173" />
@@ -16,7 +17,11 @@
         <entry key="app/src/main/res/drawable/ic_baseline_nfc_24.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/ic_baseline_print_24.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/ic_baseline_rss_feed_24.xml" value="0.173" />
+        <entry key="app/src/main/res/layout-land/activity_passport.xml" value="0.1388888888888889" />
+        <entry key="app/src/main/res/layout/activity_camera.xml" value="0.32864583333333336" />
+        <entry key="app/src/main/res/layout/activity_camera_new.xml" value="0.15" />
         <entry key="app/src/main/res/layout/activity_civil_id.xml" value="0.1640625" />
+        <entry key="app/src/main/res/layout/activity_find.xml" value="0.16302083333333334" />
         <entry key="app/src/main/res/layout/activity_info.xml" value="0.15" />
         <entry key="app/src/main/res/layout/activity_iris.xml" value="0.1640625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15" />
@@ -27,6 +32,7 @@
         <entry key="app/src/main/res/layout/activity_start.xml" value="0.1640625" />
         <entry key="app/src/main/res/layout/ib_scan_land.xml" value="0.15" />
         <entry key="app/src/main/res/layout/ib_scan_port.xml" value="0.1640625" />
+        <entry key="app/src/main/res/layout/item_user_data.xml" value="0.16302083333333334" />
         <entry key="app/src/main/res/layout/printer_index.xml" value="0.1640625" />
         <entry key="app/src/main/res/layout/titlebar.xml" value="0.1640625" />
         <entry key="app/src/main/res/layout/usbprint_code_and_pic.xml" value="0.1640625" />

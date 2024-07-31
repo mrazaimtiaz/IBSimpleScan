@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg"
+    android:layout_height="match_parent"
+    tools:context=".PassportActivity" >
+
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:background="@drawable/bg"
     android:layout_height="match_parent"
@@ -45,6 +56,18 @@
 
         />
 
+    <ImageView
+        android:id="@+id/search"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/home"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_baseline_youtube_searched_for_24"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+
+        />
+
     <TextView
         android:id="@+id/text"
         android:text="Please Insert Passport     الرجاء إدخال جواز السفر"
@@ -53,7 +76,7 @@
         android:fontFamily="monospace"
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="28sp"
+        android:textSize="18sp"
         android:textColor="#000"
 app:layout_constraintTop_toBottomOf="@+id/back"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,16 +100,81 @@ app:layout_constraintTop_toBottomOf="@+id/back"
         android:layout_height="70dp"/>
 
 
+    <Button
+        android:id="@+id/CopyBtn"
+        android:visibility="gone"
+        android:textColor="#fff"
 
+        android:text="Copy"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text"
+        app:layout_constraintStart_toEndOf="@+id/ReadNowBtn"
+
+        android:background="@drawable/btnaction"
+        android:textSize="23sp"
+        android:layout_width="150dp"
+        android:layout_height="70dp"/>
+
+
+    <LinearLayout
+        android:id="@+id/layoutSearch"
+        app:layout_constraintTop_toBottomOf="@+id/ReadNowBtn"
+app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+
+
+            android:textColor="#000"
+            android:id="@+id/search_edit_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Search"
+            android:inputType="text"
+            android:padding="8dp"
+            android:background="@drawable/edit_text_bg" />
+
+        <Button
+            android:id="@+id/search_button"
+            android:text="Search"
+            android:textSize="17sp"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:padding="8dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/searchResult"
+        android:textColor="#9c0c0c"
+        android:visibility="gone"
+        android:text=""
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/layoutSearch"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/textPassoertMzr"
         android:textColor="#000"
         android:text=""
+        android:visibility="gone"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/ReadNowBtn"
+        app:layout_constraintTop_toBottomOf="@+id/searchResult"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -94,6 +182,7 @@ app:layout_constraintTop_toBottomOf="@+id/back"
         android:id="@+id/textPassoert"
         android:textColor="#000"
         android:text=""
+        android:visibility="gone"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="18sp"
@@ -105,7 +194,7 @@ app:layout_constraintTop_toBottomOf="@+id/back"
 
     <ImageView
         android:id="@+id/machineImage"
-
+android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="1"
@@ -116,40 +205,479 @@ app:layout_constraintTop_toBottomOf="@+id/back"
         app:layout_constraintTop_toBottomOf="@+id/ReadNowBtn" />
 
 
-
     <LinearLayout
-        android:layout_width="600dp"
+        android:layout_width="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="wrap_content"
-        android:id="@+id/passportLayout"
-        android:visibility="gone"
-        android:layout_marginTop="60dp"
+        android:visibility="visible"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/textPassoertMzr"
-        android:orientation="vertical"
-        android:padding="16dp">
-
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
         <!-- Header with Title -->
-        <TextView
-            android:id="@+id/passport_title"
-            android:layout_width="wrap_content"
+
+
+        <!-- Container for visa Details -->
+
+
+        <LinearLayout
+
+            android:id="@+id/visaLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Passport"
-            android:textStyle="bold"
-            android:textSize="24sp"
-            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:elevation="2dp">
 
-            android:textColor="#000"/>
+            <TextView
+                android:id="@+id/passport_title_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Visa Detail"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_gravity="center"
 
+                android:textColor="#000"/>
+            <TextView
+                android:id="@+id/document_label_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Passport No:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"/>
+
+            <TextView
+                android:id="@+id/document_value_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="#000"
+                android:text=""
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+
+
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+
+                    android:layout_weight="1"
+                    >
+
+
+
+                    <TextView
+                        android:id="@+id/visa_type_label_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Visa Type:"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#000"/>
+                    <TextView
+                        android:id="@+id/visa_type_value_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <!-- Name -->
+                    <TextView
+                        android:id="@+id/visa_number_label_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Visa Number:"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#000"/>
+
+
+                    <TextView
+                        android:id="@+id/visa_number_value_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"/>
+
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+
+
+
+            <!-- Name -->
+            <TextView
+                android:id="@+id/name_label_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"/>
+
+            <TextView
+                android:id="@+id/name_value_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Nationality -->
+            <TextView
+                android:id="@+id/nationality_label_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nationality:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"/>
+
+
+
+            <TextView
+                android:id="@+id/nationality_value_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Expiry Date -->
+
+            <TextView
+                android:id="@+id/expiry_label_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expiry Date:"
+
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"/>
+
+            <TextView
+                android:id="@+id/expiry_value_visa"
+                android:layout_width="wrap_content"
+
+                android:textColor="#000"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+
+            <TextView
+                android:id="@+id/dob_label_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DOB Date:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"/>
+
+            <TextView
+                android:id="@+id/dob_value_visa"
+                android:layout_width="wrap_content"
+
+                android:textColor="#000"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Gender -->
+            <TextView
+                android:id="@+id/gender_label_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"/>
+
+            <TextView
+                android:id="@+id/gender_value_visa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="#000"
+                android:text=""
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+
+                    android:layout_weight="1"
+                    >
+
+
+
+                    <TextView
+                        android:id="@+id/date_of_issue_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date of issue:"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#000"/>
+                    <TextView
+                        android:id="@+id/date_of_issue_value_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <!-- Name -->
+                    <TextView
+                        android:id="@+id/visa_expiry_date_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Visa Expiry Date:"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#000"/>
+
+
+                    <TextView
+                        android:id="@+id/visa_expiry_value_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"/>
+
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+
+                    android:layout_weight="1"
+                    >
+
+
+
+                    <TextView
+                        android:id="@+id/moi_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MOI Reference:"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#000"/>
+                    <TextView
+                        android:id="@+id/moi_value_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <!-- Name -->
+                    <TextView
+                        android:id="@+id/passport_type_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Passport Type:"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#000"/>
+
+
+                    <TextView
+                        android:id="@+id/passport_type_value_visa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"/>
+
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:id="@+id/dummyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:elevation="2dp">
+        </LinearLayout>
         <!-- Container for Passport Details -->
         <LinearLayout
 
+            android:id="@+id/passportLayout"
+
+            android:layout_weight="1"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="#FFFFFF"
-            android:padding="16dp"
+
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:elevation="2dp">
+
+            <!-- Header with Title -->
+            <TextView
+                android:id="@+id/passport_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Passport"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_gravity="center"
+
+                android:textColor="#000"/>
+            <TextView
+                android:id="@+id/document_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Passport No:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"/>
+
+            <TextView
+                android:id="@+id/document_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="#000"
+                android:text=""
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+
+
+            <!-- Name -->
+            <TextView
+                android:id="@+id/visa_number_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"/>
+
+            <TextView
+                android:id="@+id/visa_number_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
 
             <!-- Name -->
             <TextView
@@ -255,29 +783,20 @@ app:layout_constraintTop_toBottomOf="@+id/back"
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp"/>
 
-            <TextView
-                android:id="@+id/document_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Passport No:"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="#000"/>
-
-            <TextView
-                android:id="@+id/document_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:textColor="#000"
-                android:text=""
-                android:textSize="16sp"
-                android:layout_marginBottom="8dp"/>
 
 
         </LinearLayout>
-    </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+
+
 
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

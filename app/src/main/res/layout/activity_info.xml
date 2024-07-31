@@ -20,6 +20,22 @@
 
         />
 
+
+    <Button
+        android:id="@+id/printButton"
+        android:textColor="#fff"
+        app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toEndOf="@+id/back"
+        android:text="Print"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btnaction"
+        android:textSize="23sp"
+        android:layout_width="150dp"
+        android:layout_height="70dp"/>
+
     <TextView
         android:id="@+id/textPassoert"
         android:textColor="#000"
@@ -39,15 +55,42 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="80dp"
         android:layout_width="500dp"
-        android:layout_height="200dp" />
+        android:layout_height="110dp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="80dp"
+        android:layout_width="500dp"
+        android:layout_height="110dp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="80dp"
+        android:layout_width="500dp"
+        android:layout_height="110dp" />
 
     <ImageView
         android:id="@+id/imageViewCamera"
         app:layout_constraintTop_toBottomOf="@+id/textPassoert"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
-        android:layout_width="400dp"
-        android:layout_height="300dp" />
+        android:layout_width="250dp"
+        android:layout_height="100dp" />
+
+    <ImageView
+        android:id="@+id/imageViewCameraTwo"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCamera"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_width="250dp"
+        android:layout_height="100dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

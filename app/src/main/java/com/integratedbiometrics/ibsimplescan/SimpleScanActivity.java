@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import java.util.ArrayList;
 
@@ -372,6 +373,12 @@ public class SimpleScanActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 
+
+	//	List<Bitmap> byteTemp = Constants.INSTANCE.getScanByte();
+	//	byteTemp = [];
+		Constants.INSTANCE.setScanByte(new ArrayList<>());
+
+		Constants.INSTANCE.setFingerFeature(new ArrayList<>());
 		OnCheckPermission();
 
 		m_ibScan = IBScan.getInstance(this.getApplicationContext());
@@ -589,8 +596,12 @@ public class SimpleScanActivity extends Activity
 	findViewById(R.id.start_camera_btn).setOnClickListener(new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Intent intent = new Intent(SimpleScanActivity.this, IrisActivity.class);
+
+			Intent intent = new Intent(SimpleScanActivity.this, CameraNewActivity.class);
 			startActivity(intent);
+
+//			Intent intent = new Intent(SimpleScanActivity.this, IrisActivity.class);
+//			startActivity(intent);
 		}
 
 
@@ -2393,12 +2404,22 @@ public class SimpleScanActivity extends Activity
 					m_drawBuffer = new byte[destWidth*destHeight*4];
 				}
 
+				Log.d(TAG, "run: called imgpreview final__");
 					if (image.isFinal)
 				{
-					Log.d(TAG, "run: called imgpreview final");
 					//save my--
 
-					Constants.INSTANCE.setScanByte(m_BitmapImage);
+				//	Constants.INSTANCE.setScanByte(m_BitmapImage);
+//					byteTemp.add(m_BitmapImage);
+					 List<Bitmap> byteTemp = Constants.INSTANCE.getScanByte();
+
+
+					List<byte[]> fingerFeatureList = Constants.INSTANCE.getFingerFeature();
+					byteTemp.add(image.toBitmapScaled(100,100));
+					Constants.INSTANCE.setScanByte(byteTemp);
+					fingerFeatureList.add(m_drawBuffer);
+					Constants.INSTANCE.setFingerFeature(fingerFeatureList);
+					Log.d(TAG, "run: called imgpreview final1" + byteTemp);
 
 						getIBScanDevice().generateDisplayImage(image.buffer, image.width, image.height,
 								m_drawBuffer, destWidth, destHeight, (byte) 255, 2 /*IBSU_IMG_FORMAT_RGB32*/, 2 /*HIGH QUALITY*/, true);

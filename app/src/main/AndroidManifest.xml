@@ -4,8 +4,6 @@
     android:versionCode="25"
     android:versionName="2.1.0.0">
 
-    <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -15,10 +13,16 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@drawable/icon"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true">
+
+
+        <activity
+            android:name=".CameraNewActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight" />
         <activity
             android:name=".ElyMrzActivity"
             android:exported="false"
@@ -44,11 +48,17 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.DayNight" />
         <activity
+            android:name=".FindActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight" />
+        <activity
+            android:name=".USBPrinterActivityTest"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight" />
+        <activity
             android:name=".PassportActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat">
-
-        </activity>
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".ScanActivity"
             android:exported="false"
